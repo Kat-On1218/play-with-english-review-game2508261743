@@ -1,0 +1,32 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='800' height='800' viewBox='0 0 800 800'>
+<rect width='100%' height='100%' fill='white'/>
+<circle cx='400' cy='400' r='340' fill='none' stroke='black' stroke-width='8'/>
+<circle cx='400' cy='400' r='299' fill='none' stroke='black' stroke-width='4'/>
+<line x1='400.00' y1='121.20' x2='400.00' y2='94.00' stroke='black' stroke-width='8'/>
+<line x1='539.40' y1='158.55' x2='553.00' y2='135.00' stroke='black' stroke-width='8'/>
+<line x1='641.45' y1='260.60' x2='665.00' y2='247.00' stroke='black' stroke-width='8'/>
+<line x1='678.80' y1='400.00' x2='706.00' y2='400.00' stroke='black' stroke-width='8'/>
+<line x1='641.45' y1='539.40' x2='665.00' y2='553.00' stroke='black' stroke-width='8'/>
+<line x1='539.40' y1='641.45' x2='553.00' y2='665.00' stroke='black' stroke-width='8'/>
+<line x1='400.00' y1='678.80' x2='400.00' y2='706.00' stroke='black' stroke-width='8'/>
+<line x1='260.60' y1='641.45' x2='247.00' y2='665.00' stroke='black' stroke-width='8'/>
+<line x1='158.55' y1='539.40' x2='135.00' y2='553.00' stroke='black' stroke-width='8'/>
+<line x1='121.20' y1='400.00' x2='94.00' y2='400.00' stroke='black' stroke-width='8'/>
+<line x1='158.55' y1='260.60' x2='135.00' y2='247.00' stroke='black' stroke-width='8'/>
+<line x1='260.60' y1='158.55' x2='247.00' y2='135.00' stroke='black' stroke-width='8'/>
+<text x='515.60' y='199.77' text-anchor='middle' dominant-baseline='middle' font-family='Comic Sans MS, Comic Sans, cursive' font-weight='700' font-size='96'>1</text>
+<text x='600.23' y='284.40' text-anchor='middle' dominant-baseline='middle' font-family='Comic Sans MS, Comic Sans, cursive' font-weight='700' font-size='96'>2</text>
+<text x='631.20' y='400.00' text-anchor='middle' dominant-baseline='middle' font-family='Comic Sans MS, Comic Sans, cursive' font-weight='700' font-size='96'>3</text>
+<text x='600.23' y='515.60' text-anchor='middle' dominant-baseline='middle' font-family='Comic Sans MS, Comic Sans, cursive' font-weight='700' font-size='96'>4</text>
+<text x='515.60' y='600.23' text-anchor='middle' dominant-baseline='middle' font-family='Comic Sans MS, Comic Sans, cursive' font-weight='700' font-size='96'>5</text>
+<text x='400.00' y='631.20' text-anchor='middle' dominant-baseline='middle' font-family='Comic Sans MS, Comic Sans, cursive' font-weight='700' font-size='96'>6</text>
+<text x='284.40' y='600.23' text-anchor='middle' dominant-baseline='middle' font-family='Comic Sans MS, Comic Sans, cursive' font-weight='700' font-size='96'>7</text>
+<text x='199.77' y='515.60' text-anchor='middle' dominant-baseline='middle' font-family='Comic Sans MS, Comic Sans, cursive' font-weight='700' font-size='96'>8</text>
+<text x='168.80' y='400.00' text-anchor='middle' dominant-baseline='middle' font-family='Comic Sans MS, Comic Sans, cursive' font-weight='700' font-size='96'>9</text>
+<text x='199.77' y='284.40' text-anchor='middle' dominant-baseline='middle' font-family='Comic Sans MS, Comic Sans, cursive' font-weight='700' font-size='96'>10</text>
+<text x='284.40' y='199.77' text-anchor='middle' dominant-baseline='middle' font-family='Comic Sans MS, Comic Sans, cursive' font-weight='700' font-size='96'>11</text>
+<text x='400.00' y='168.80' text-anchor='middle' dominant-baseline='middle' font-family='Comic Sans MS, Comic Sans, cursive' font-weight='700' font-size='96'>12</text>
+<line x1='400' y1='400' x2='493.50' y2='561.95' stroke='black' stroke-width='14'/>
+<line x1='400' y1='400' x2='400.00' y2='128.00' stroke='black' stroke-width='10'/>
+<circle cx='400' cy='400' r='12' fill='black'/>
+</svg>

@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Play with English — Review Game</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Web font fallbacks to keep the Comic look on all devices -->
+  <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --brand-green:#2e7d32;
+      --brand-yellow:#f6cd4c;
+      --brand-yellow-2:#f8e71c;
+
+      --black:#111827; --gray-700:#374151; --gray-600:#4b5563;
+      --gray-200:#e5e7eb; --white:#ffffff;
+
+      --shadow:0 6px 20px rgba(0,0,0,.08);
+      --radius:16px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:"Comic Sans MS","Comic Sans","Comic Neue","Patrick Hand",cursive,sans-serif;
+      background:#ffffff; color:#111;
+      min-height:100vh; padding:24px;
+      -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+    }
+    .container{max-width:1100px; margin:0 auto}
+    header.card, main.card{
+      background:var(--white); border-radius:var(--radius); box-shadow:var(--shadow);
+      padding:16px 20px; margin-bottom:24px; border:2px solid var(--brand-yellow);
+    }
+    main.card{padding:24px}
+
+    .row{display:flex; gap:16px; align-items:center; flex-wrap:wrap}
+    .spacer{flex:1}
+
+    .btn{
+      border:2px solid transparent; border-radius:12px; padding:10px 14px; font-weight:800; cursor:pointer;
+      transition:transform .1s ease, background .15s ease, opacity .15s ease, border-color .15s ease;
+      font-family:"Comic Sans MS","Comic Sans","Comic Neue","Patrick Hand",cursive,sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn:active{transform:translateY(1px)}
+    .btn.green{background:var(--brand-green);color:#fff}
+    .btn.green:hover{background:#246628}
+    .btn.yellow{background:var(--brand-yellow);color:#4a2c00;border-color:#eab308}
+    .btn.yellow:hover{background:var(--brand-yellow-2)}
+    .btn.gray{background:var(--gray-600);color:#fff}
+    .btn.gray:hover{background:#374151}
+
+    .pill{
+      display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px;
+      background:#fff7cc; color:#4a2c00; font-weight:800; border:2px solid #fde68a;
+    }
+    .hearts span{font-size:24px}
+
+    .calendar{
+      width:50px; height:50px; border-radius:10px; overflow:hidden;
+      display:inline-flex; flex-direction:column; border:2px solid #1f2937; font-weight:800;
+    }
+    .calendar-top{background:var(--brand-green); color:#fff; text-align:center; font-size:10px; line-height:18px; height:18px; letter-spacing:.06em}
+    .calendar-bottom{flex:1; background:#fff; color:#111827; display:flex; align-items:center; justify-content:center; font-size:18px}
+
+    .grid{display:grid; gap:16px}
+    @media (min-width:720px){.grid.cols-2{grid-template-columns:repeat(2,1fr)}}
+
+    .topic{
+      background:#fff; border:2px solid var(--gray-200); border-radius:16px; padding:20px; text-align:center; cursor:pointer;
+      transition:box-shadow .15s ease, border-color .15s ease, transform .05s ease;
+    }
+    .topic:hover{box-shadow:var(--shadow); border-color:var(--brand-green); transform:translateY(-1px)}
+    .topic .icon{font-size:34px; margin-bottom:8px}
+
+    .title{font-size:28px; font-weight:900; color:var(--brand-green); margin:12px 0 4px}
+    .subtitle{color:#5b5b5b; margin:0 0 10px}
+    .question{font-size:24px; font-weight:900; color:#111; margin:8px 0 16px}
+
+    .visual-wrap{display:flex; justify-content:center; align-items:center; margin-bottom:8px; min-height:280px;}
+    img.question-img{
+      max-width:460px; width:100%; border-radius:16px; border:3px solid #ffe08a; display:block; margin:auto;
+      height:auto; image-rendering:auto;
+    }
+
+    .img-missing{
+      display:inline-block; padding:16px; border:3px dashed #f59e0b; border-radius:16px; background:#fffbea; color:#7a4a00; font-weight:900;
+    }
+
+    .options{display:grid; gap:14px}
+    @media (min-width:720px){.options{grid-template-columns:repeat(2,1fr)}}
+    .option-btn{
+      border:4px solid var(--brand-green); background:#fff; color:#0f172a; font-weight:900;
+      border-radius:16px; padding:16px; cursor:pointer; font-size:18px;
+      transition:background .15s ease, transform .05s ease, border-color .15s ease;
+      font-family:"Comic Sans MS","Comic Sans","Comic Neue","Patrick Hand",cursive,sans-serif;
+    }
+    .option-btn:hover{background:#f0fff4}
+    .option-btn.correct{background:#dcfce7; border-color:#22c55e; color:#14532d}
+    .option-btn.wrong{background:#fee2e2; border-color:#ef4444; color:#7f1d1d}
+    .option-btn.selected{background:#fffbd1; border-color:var(--brand-yellow); box-shadow:inset 0 0 0 2px rgba(246,205,76,.4)}
+
+    .muted{color:#6b7280}
+    .banner{margin-top:18px; text-align:center}
+    .banner .good{color:#166534; font-weight:900; font-size:22px}
+    .banner .bad{color:#991b1b; font-weight:900; font-size:22px}
+
+    .progress{width:100%; height:10px; background:#fff3bf; border-radius:999px; overflow:hidden; border:2px solid #fde68a}
+    .bar{height:100%; background:var(--brand-green); width:0%; transition:width .25s ease}
+
+    .section{
+      background:#fff; border:2px solid var(--brand-yellow); border-radius:16px; padding:16px; margin-bottom:18px; text-align:center;
+    }
+    .center{text-align:center}
+    .lg{font-size:18px}
+    .badge{display:inline-block; padding:8px 12px; border-radius:999px; background:#fff7cc; color:#7a4a00; font-weight:900; border:2px solid #ffd24d}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="card" id="header"></header>
+    <main class="card" id="main"></main>
+  </div>
+
+  <script>
+    /* ================== Voice selection (English only) ================== */
+    let EN_VOICE = null;
+
+    function pickEnglishVoice() {
+      const voices = speechSynthesis.getVoices ? speechSynthesis.getVoices() : [];
+      // Prefer en-US/GB/AU/CA/IN, any "en-" language, or names containing English brand voices
+      const byLang = voices.filter(v => /^en(-|_)?/i.test(v.lang));
+      const byName = voices.filter(v => /english|samantha|karen|daniel|martha|serena|moira|allison|ava|susan|victoria|fred/i.test(v.name));
+      EN_VOICE = (byLang[0] || byName[0] || voices.find(v => v.lang && v.lang.toLowerCase().includes('en')) || null);
+      if(!EN_VOICE) {
+        console.warn('No explicit English voice found; falling back to default.');
+      } else {
+        console.log('Selected English voice:', EN_VOICE.name, EN_VOICE.lang);
+      }
+    }
+
+    // On some phones (iOS), voices arrive asynchronously
+    if ('speechSynthesis' in window) {
+      try {
+        pickEnglishVoice();
+        window.speechSynthesis.onvoiceschanged = () => {
+          pickEnglishVoice();
+        };
+      } catch(e) { console.warn(e); }
+    }
+
+    function speak(text) {
+      if (S.muted) return;
+      if (!('speechSynthesis' in window)) return;
+      speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'en-US';                 // force English language
+      if (EN_VOICE) u.voice = EN_VOICE; // force English voice if available
+      window.speechSynthesis.speak(u);
+    }
+
+    /* ================== helpers ================== */
+    const $ = (sel, root=document) => root.querySelector(sel);
+    const todayStr = () => new Date().toLocaleDateString('en-US',{month:'long',day:'numeric'});
+    const todayDay = () => new Date().getDate();
+    const pad2 = n => String(n).padStart(2,'0');
+    const bust = 'v=3'; // cache-buster so phones reload images and HTML
+
+    // Load clock image robustly (SVG -> PNG) with cache-busting
+    function clockImgFor(hour){
+      const box = document.createElement('div');
+      box.style.textAlign = 'center';
+
+      const img = document.createElement('img');
+      img.className = 'question-img';
+      img.alt = `Clock showing ${hour} o'clock`;
+      img.src = `images/clock_${pad2(hour)}.svg?${bust}`;
+      img.dataset.stage = 'svg'; // svg -> png -> missing
+
+      img.onerror = function(){
+        if(this.dataset.stage === 'svg'){
+          this.dataset.stage = 'png';
+          this.src = `images/clock_${pad2(hour)}.png?${bust}`;
+        }else{
+          const note = document.createElement('div');
+          note.className = 'img-missing';
+          note.innerHTML = `Image not found: <code>images/clock_${pad2(hour)}.svg/png</code>`;
+          box.replaceChildren(note);
+          console.warn(`Missing image for hour ${hour}: expected images/clock_${pad2(hour)}.svg or .png`);
+        }
+      };
+
+      box.appendChild(img);
+      return box;
+    }
+
+    // Placeholder for other topics (you can replace with real images later)
+    function placeholderImg(label='Practice'){
+      const el = document.createElement('img');
+      el.className = 'question-img';
+      const safe = label.replace(/</g,'&lt;');
+      const svg = `
+        <svg xmlns='http://www.w3.org/2000/svg' width='640' height='380'>
+          <rect width='100%' height='100%' fill='#f6cd4c'/>
+          <rect x='12' y='12' width='616' height='356' fill='none' stroke='#1e2d31' stroke-width='6' rx='24'/>
+          <text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle'
+                font-family='Comic Sans MS, Comic Sans, "Comic Neue", "Patrick Hand", cursive' font-weight='700' font-size='56' fill='#1e2d31'>${safe}</text>
+        </svg>`;
+      el.src = 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+      el.alt = label;
+      return el;
+    }
+
+    /* ================== data ================== */
+    const TOPICS = {
+      time:{
+        emoji:"⏰", title:"Time", desc:"What time is it?",
+        qs:[
+          {q:"What time is it?", clockHour:1,  ans:"It's one o'clock",   opts:["It's one o'clock","It's two o'clock","It's three o'clock","It's twelve o'clock"]},
+          {q:"What time is it?", clockHour:3,  ans:"It's three o'clock", opts:["It's three o'clock","It's five o'clock","It's nine o'clock","It's seven o'clock"]},
+          {q:"What time is it?", clockHour:6,  ans:"It's six o'clock",   opts:["It's four o'clock","It's six o'clock","It's eight o'clock","It's ten o'clock"]},
+          {q:"What time is it?", clockHour:9,  ans:"It's nine o'clock",  opts:["It's nine o'clock","It's eleven o'clock","It's two o'clock","It's twelve o'clock"]},
+          {q:"What time is it?", clockHour:12, ans:"It's twelve o'clock",opts:["It's one o'clock","It's seven o'clock","It's twelve o'clock","It's ten o'clock"]},
+        ]
+      },
+      feelings:{
+        emoji:"😊", title:"Feelings", desc:"How are you feeling?",
+        qs:[
+          {q:"How are you feeling?", imgLabel:"Bored",   ans:"I'm bored",   opts:["I'm bored","I'm happy","I'm excited","I'm sleepy"]},
+          {q:"How are you feeling?", imgLabel:"Excited", ans:"I'm excited", opts:["I'm bored","I'm excited","I'm shy","I'm hungry"]},
+          {q:"How are you feeling?", imgLabel:"Sleepy",  ans:"I'm sleepy",  opts:["I'm sleepy","I'm scared","I'm silly","I'm strong"]},
+          {q:"How are you feeling?", imgLabel:"Happy",   ans:"I'm happy",   opts:["I'm happy","I'm sick","I'm nervous","I'm angry"]},
+          {q:"What happened?",       imgLabel:"Overslept", ans:"I overslept", opts:["I overslept","I'm shy","I'm hungry","I'm sick"]},
+        ]
+      },
+      weather:{
+        emoji:"☀️", title:"Weather", desc:"How is the weather?",
+        qs:[
+          {q:"How is the weather?", imgLabel:"Sunny",  ans:"It's sunny",  opts:["It's sunny","It's rainy","It's cloudy","It's windy"]},
+          {q:"How is the weather?", imgLabel:"Cloudy", ans:"It's cloudy", opts:["It's cold","It's cloudy","It's hot","It's foggy"]},
+          {q:"How is the weather?", imgLabel:"Rainy",  ans:"It's rainy",  opts:["It's rainy","It's windy","It's sunny","It's warm"]},
+          {q:"How is the weather?", imgLabel:"Cold",   ans:"It's cold",   opts:["It's hot","It's cold","It's humid","It's cool"]},
+          {q:"How is the weather?", imgLabel:"Humid",  ans:"It's humid",  opts:["It's humid","It's stormy","It's cloudy","It's hot"]},
+        ]
+      },
+      months:{
+        emoji:"📅", title:"Months", desc:"Months of the year.",
+        qs:[
+          {q:"What is the first month?", imgLabel:"January",  ans:"January",  opts:["January","February","March","April"]},
+          {q:"What is the last month?",  imgLabel:"December", ans:"December", opts:["October","November","December","January"]},
+          {q:"What month comes after July?", imgLabel:"August", ans:"August", opts:["June","August","October","September"]},
+          {q:"What month comes before September?", imgLabel:"August", ans:"August", opts:["July","May","August","October"]},
+          {q:"Which is a spring month (JP school year)?", imgLabel:"April", ans:"April", opts:["April","August","December","January"]},
+        ]
+      }
+    };
+
+    /* ================== state ================== */
+    const S = {
+      view:'menu',          // 'menu' | 'play' | 'result' | 'gameOver'
+      topicKey:null,
+      qIndex:0,
+      score:0,
+      hearts:3,
+      showBanner:false,
+      lastCorrect:null,
+      muted:false,
+      selected:null,
+      checked:false,
+      nextEnabled:false
+    };
+
+    /* ================== header ================== */
+    function heartsHTML(){ let h=''; for(let i=0;i<3;i++){ h += `<span>${i < S.hearts ? '❤️' : '🤍'}</span>`; } return h; }
+
+    function renderHeader(){
+      const el = $('#header');
+      el.innerHTML = `
+        <div class="row">
+          <div class="row" style="gap:20px;align-items:center">
+            <div class="hearts" aria-label="Lives">${heartsHTML()}</div>
+            <div class="pill" aria-label="Score"><span>⭐</span><strong>${S.score}</strong></div>
+            <div class="row" style="gap:10px;align-items:center" aria-label="Today">
+              <div class="calendar" title="Today">
+                <div class="calendar-top">TODAY</div>
+                <div class="calendar-bottom">${todayDay()}</div>
+              </div>
+              <strong>${todayStr()}</strong>
+            </div>
+          </div>
+          <div class="spacer"></div>
+          <button type="button" class="btn gray" id="btnMute">${S.muted ? '🔇 Voice Off' : '🔈 Voice On'}</button>
+          <button type="button" class="btn gray" id="btnMenu">🏠 Menu</button>
+        </div>`;
+      $('#btnMute').onclick = ()=>{ S.muted = !S.muted; renderHeader(); };
+      $('#btnMenu').onclick = ()=>{ resetAll(); S.view='menu'; render(); };
+    }
+
+    /* ================== router ================== */
+    function renderMain(){
+      const m = $('#main');
+      if(S.view==='menu') return m.replaceChildren(renderMenu());
+      if(S.view==='play') return m.replaceChildren(renderPlay());
+      if(S.view==='result') return m.replaceChildren(renderResult());
+      if(S.view==='gameOver') return m.replaceChildren(renderGameOver());
+    }
+    function render(){ renderHeader(); renderMain(); }
+
+    /* ================== menu ================== */
+    function renderMenu(){
+      const wrap = document.createElement('div');
+      wrap.innerHTML = `
+        <div class="center" style="margin-bottom:16px">
+          <div class="title">🎓 Play with English!</div>
+          <div class="lg" style="color:#5b5b5b">Review Game</div>
+        </div>
+        <div class="section">
+          <div class="lg"><strong>${todayStr()}</strong></div>
+          <div class="muted">Choose a topic and practice!</div>
+        </div>
+        <div>
+          <h3 class="subtitle" style="font-weight:900;font-size:20px">Choose a topic:</h3>
+          <div class="grid cols-2">
+            ${Object.entries(TOPICS).map(([k,t])=>`
+              <div class="topic" data-k="${k}">
+                <div class="icon" aria-hidden="true">${t.emoji}</div>
+                <div style="font-weight:900;font-size:18px">${t.title}</div>
+                <div class="muted">${t.desc} ›</div>
+              </div>`).join('')}
+          </div>
+        </div>`;
+      wrap.querySelectorAll('.topic').forEach(x=>x.onclick = ()=>startTopic(x.dataset.k));
+      return wrap;
+    }
+
+    /* ================== play view ================== */
+    function renderPlay(){
+      const t = TOPICS[S.topicKey];
+      const q = t.qs[S.qIndex];
+      const progress = ((S.qIndex+1)/t.qs.length)*100;
+
+      const wrap = document.createElement('div');
+
+      const block = document.createElement('div');
+      block.className = 'section';
+      block.innerHTML = `
+        <div class="title" style="font-size:24px;margin:0 0 6px">${t.emoji} ${t.title}</div>
+        <div class="muted" style="margin-bottom:10px">${t.desc}</div>
+        <div class="progress"><div class="bar" style="width:${progress}%"></div></div>
+        <div class="muted" style="margin-top:6px">Question ${S.qIndex+1} of ${t.qs.length}</div>`;
+      wrap.appendChild(block);
+
+      const qa = document.createElement('div');
+      qa.className = 'center';
+
+      // Visual
+      const visualWrap = document.createElement('div');
+      visualWrap.className = 'visual-wrap';
+      if(q.clockHour){
+        visualWrap.appendChild(clockImgFor(q.clockHour));
+      } else {
+        visualWrap.appendChild(placeholderImg(q.imgLabel || q.ans || 'Practice'));
+      }
+      qa.appendChild(visualWrap);
+
+      qa.innerHTML += `
+        <div class="question">${q.q}</div>
+        <button type="button" class="btn green" id="listenBtn">🔊 Listen</button>`;
+      wrap.appendChild(qa);
+      qa.querySelector('#listenBtn').onclick = ()=>speak(q.q);
+
+      // Options (selectable, speak on click)
+      const opts = document.createElement('div');
+      opts.className = 'options';
+      q.opts.forEach(opt=>{
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'option-btn';
+        if(S.selected===opt && !S.checked) b.classList.add('selected');
+        if(S.checked){
+          b.disabled = true;
+          if(opt===q.ans) b.classList.add('correct');
+          if(opt===S.selected && S.selected!==q.ans) b.classList.add('wrong');
+        }
+        b.textContent = opt;
+        b.onclick = ()=>{
+          if(S.checked) return;
+          S.selected = opt;
+          speak(opt);            // speaks immediately in English
+          renderMain();
+        };
+        opts.appendChild(b);
+      });
+      wrap.appendChild(opts);
+
+      // Feedback
+      if(S.checked && S.showBanner){
+        const fb = document.createElement('div');
+        fb.className = 'banner';
+        fb.setAttribute('aria-live','polite');
+        fb.innerHTML = S.lastCorrect
+          ? `<div class="good">✅ Correct! Great job!</div><div class="muted">Answer: <span class="badge">${q.ans}</span></div>`
+          : `<div class="bad">❌ Try again!</div><div class="muted">Correct answer: <span class="badge">${q.ans}</span></div>`;
+        wrap.appendChild(fb);
+      }
+
+      // Controls
+      const controls = document.createElement('div');
+      controls.style = 'margin-top:14px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap';
+
+      const submitBtn = document.createElement('button');
+      submitBtn.type = 'button';
+      submitBtn.className = 'btn yellow';
+      submitBtn.id = 'submitBtn';
+      submitBtn.textContent = '✅ Submit';
+      if(!S.selected || S.checked){ submitBtn.disabled=true; submitBtn.style.opacity='.5'; submitBtn.style.cursor='not-allowed'; }
+      submitBtn.onclick = ()=>submitAnswer();
+      controls.appendChild(submitBtn);
+
+      // Try Again button when answer was wrong
+      if(S.checked && !S.lastCorrect){
+        const tryBtn = document.createElement('button');
+        tryBtn.type = 'button';
+        tryBtn.className = 'btn gray';
+        tryBtn.id = 'tryAgainBtn';
+        tryBtn.textContent = '🔁 Try Again';
+        tryBtn.onclick = ()=>tryAgain();
+        controls.appendChild(tryBtn);
+      }
+
+      // Next after grading
+      if(S.checked && S.nextEnabled){
+        const nextBtn = document.createElement('button');
+        nextBtn.type = 'button';
+        nextBtn.className = 'btn green';
+        nextBtn.id = 'nextBtn';
+        nextBtn.textContent = '➡️ Next';
+        nextBtn.onclick = ()=>nextStep();
+        controls.appendChild(nextBtn);
+      }
+      wrap.appendChild(controls);
+
+      return wrap;
+    }
+
+    /* ================== result & game over ================== */
+    function renderResult(){
+      const wrap = document.createElement('div');
+      const badge = S.score>=200 ? "🏅 Gold Star Learner"
+                  : S.score>=120 ? "🥈 Silver Star Learner"
+                  : S.score>=60  ? "🥉 Bronze Star Learner"
+                  : "⭐ Starter Star";
+      wrap.innerHTML = `
+        <div class="center" style="margin-bottom:18px">
+          <div class="title" style="margin:0 0 6px">All Done! 🎉</div>
+          <div class="lg">Topic: <strong>${TOPICS[S.topicKey].title}</strong></div>
+        </div>
+        <div class="section" style="max-width:520px;margin:0 auto 18px">
+          <div class="lg"><strong>Score:</strong> ${S.score} points</div>
+          <div class="lg"><strong>Lives left:</strong> ${S.hearts} / 3</div>
+          <div style="margin-top:12px"><span class="badge">${badge}</span></div>
+        </div>
+        <div class="center" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+          <button type="button" class="btn green" id="playAgain">🔁 Play Again</button>
+          <button type="button" class="btn yellow" id="menuBtn">🏠 Return to Menu</button>
+        </div>`;
+      $('#playAgain').onclick = ()=>{ restartTopic(); render(); };
+      $('#menuBtn').onclick = ()=>{ resetAll(); S.view='menu'; render(); };
+      return wrap;
+    }
+
+    function renderGameOver(){
+      const wrap = document.createElement('div');
+      wrap.innerHTML = `
+        <div class="center" style="margin-bottom:18px">
+          <div class="title" style="margin:0 0 6px; color:#dc2626">Game Over 💔</div>
+          <div class="lg muted">Don't worry — keep practicing!</div>
+          <div class="lg" style="margin-top:8px"><strong>Your score:</strong> ${S.score}</div>
+        </div>
+        <div class="center" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+          <button type="button" class="btn green" id="retryTopic">🔄 Retry Topic</button>
+          <button type="button" class="btn yellow" id="menuBtn">🏠 Return to Menu</button>
+        </div>`;
+      $('#retryTopic').onclick = ()=>{ restartTopic(); render(); };
+      $('#menuBtn').onclick = ()=>{ resetAll(); S.view='menu'; render(); };
+      return wrap;
+    }
+
+    /* ================== logic ================== */
+    function startTopic(key){
+      S.topicKey = key;
+      S.view='play';
+      S.qIndex=0;
+      S.score=0;
+      S.hearts=3;
+      S.showBanner=false;
+      S.lastCorrect=null;
+      S.selected=null;
+      S.checked=false;
+      S.nextEnabled=false;
+      render();
+    }
+    function restartTopic(){
+      S.qIndex=0; S.score=0; S.hearts=3; S.showBanner=false; S.lastCorrect=null; S.selected=null; S.checked=false; S.nextEnabled=false; S.view='play';
+    }
+    function resetAll(){
+      S.topicKey=null; S.qIndex=0; S.score=0; S.hearts=3; S.showBanner=false; S.lastCorrect=null; S.selected=null; S.checked=false; S.nextEnabled=false;
+    }
+
+    function submitAnswer(){
+      const t = TOPICS[S.topicKey];
+      const q = t.qs[S.qIndex];
+      if(!S.selected || S.checked) return;
+
+      const correct = S.selected === q.ans;
+
+      if(correct){
+        S.score += 10;
+      }else{
+        S.hearts = Math.max(0, S.hearts - 1);
+        // Speak the correct answer after a short delay (still English voice)
+        setTimeout(()=>speak(q.ans), 350);
+      }
+
+      S.lastCorrect = correct;
+      S.showBanner = true;
+      S.checked = true;
+      S.nextEnabled = false;
+
+      renderHeader();
+      renderMain();
+
+      // After feedback, enable Next (Try Again is shown for wrong)
+      setTimeout(()=>{ S.nextEnabled = true; renderMain(); }, 800);
+    }
+
+    function tryAgain(){
+      S.selected = null;
+      S.checked = false;
+      S.showBanner = false;
+      S.nextEnabled = false;
+      renderMain();
+    }
+
+    function nextStep(){
+      if(S.hearts <= 0){ S.view='gameOver'; render(); return; }
+      const t = TOPICS[S.topicKey];
+      const lastQ = S.qIndex >= t.qs.length - 1;
+      if(lastQ){
+        S.view='result';
+      }else{
+        S.qIndex += 1; S.selected=null; S.checked=false; S.showBanner=false; S.nextEnabled=false;
+      }
+      render();
+    }
+
+    /* ================== boot ================== */
+    render();
+  </script>
+</body>
+</html>
